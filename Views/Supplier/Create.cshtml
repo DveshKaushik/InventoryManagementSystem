@@ -1,0 +1,48 @@
+@{
+    ViewData["Title"] = "Add Supplier";
+}
+
+<div class="container mt-4">
+    <h2>Add New Supplier</h2>
+    <hr />
+
+    <form method="post" action="/Supplier/Create">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label class="form-label">Company Name</label>
+                    <input type="text" name="Name"
+                           class="form-control" required />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Contact Person</label>
+                    <input type="text" name="Contact"
+                           class="form-control" required />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Phone</label>
+                    <input type="text" name="Phone"
+                           class="form-control" required />
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input type="email" name="Email"
+                           class="form-control" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Address</label>
+                    <input type="text" name="Address"
+                           class="form-control" />
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-success">
+            Save Supplier
+        </button>
+        <a href="/Supplier/Index" class="btn btn-secondary ms-2">
+            Cancel
+        </a>
+    </form>
+</div>

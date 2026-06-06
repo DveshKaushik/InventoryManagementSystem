@@ -1,0 +1,54 @@
+@model List<InventoryManagementSystem.Models.Supplier>
+
+@{
+    ViewData["Title"] = "Suppliers";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>🏭 Suppliers</h2>
+        @if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        ⚠️ @TempData["Error"]
+    </div>
+}
+        <a href="/Supplier/Create" class="btn btn-primary">
+            + Add New Supplier
+        </a>
+    </div>
+
+    <table class="table table-bordered table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Company Name</th>
+                <th>Contact Person</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>Address</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var supplier in Model)
+            {
+                <tr>
+                    <td>@supplier.SupplierId</td>
+                    <td>@supplier.Name</td>
+                    <td>@supplier.Contact</td>
+                    <td>@supplier.Phone</td>
+                    <td>@supplier.Email</td>
+                    <td>@supplier.Address</td>
+                    <td>
+                        <a href="/Supplier/Delete/@supplier.SupplierId"
+                           class="btn btn-danger btn-sm"
+                           onclick="return confirm('Delete this supplier?')">
+                            Delete
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

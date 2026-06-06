@@ -1,0 +1,62 @@
+@model List<InventoryManagementSystem.Models.StockMovement>
+
+@{
+    ViewData["Title"] = "Stock Movements";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>📋 Stock Movements</h2>
+        <a href="/StockMovement/Create" class="btn btn-primary">
+            + Record Movement
+        </a>
+    </div>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">
+            ⚠️ @TempData["Error"]
+        </div>
+    }
+
+    <table class="table table-bordered table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Product</th>
+                <th>Type</th>
+                <th>Quantity</th>
+                <th>Date</th>
+                <th>Reason</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var movement in Model)
+            {
+                <tr>
+                    <td>@movement.MovementId</td>
+                    <td>@movement.ProductName</td>
+                    <td>
+                        @if (movement.MovementType == "IN")
+                        {
+                            <span class="badge bg-success">
+                                ↑ IN
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">
+                                ↓ OUT
+                            </span>
+                        }
+                    </td>
+                    <td>@movement.Quantity units</td>
+                    <td>
+                        @movement.MovementDate.ToString("dd MMM yyyy hh:mm tt")
+                    </td>
+                    <td>@movement.Reason</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
