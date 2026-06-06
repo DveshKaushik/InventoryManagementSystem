@@ -1,8 +1,150 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model InventoryManagementSystem.Models.DashboardViewModel
+
+@{
+    ViewData["Title"] = "Dashboard";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container mt-4">
+    <h2 class="mb-4">📊 Inventory Dashboard</h2>
+
+    <!-- Stats Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-white bg-primary shadow">
+                <div class="card-body text-center">
+                    <h1 class="display-4 fw-bold">@Model.TotalProducts</h1>
+                    <p class="card-text fs-5">Total Products</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-success shadow">
+                <div class="card-body text-center">
+                    <h1 class="display-4 fw-bold">@Model.TotalSuppliers</h1>
+                    <p class="card-text fs-5">Total Suppliers</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-warning shadow">
+                <div class="card-body text-center">
+                    <h1 class="display-4 fw-bold">@Model.LowStockCount</h1>
+                    <p class="card-text fs-5">Low Stock Items</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-info shadow">
+                <div class="card-body text-center">
+                    <h4 class="fw-bold mt-2">
+                        ₹@Model.TotalInventoryValue.ToString("N0")
+                    </h4>
+                    <p class="card-text fs-5">Total Value</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Stock Level Chart -->
+        <div class="col-md-7">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">📈 Stock Levels vs Minimum</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="stockChart" height="120"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Low Stock Alerts -->
+        <div class="col-md-5">
+            <div class="card shadow mb-4 border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0">⚠️ Low Stock Alerts</h5>
+                </div>
+                <div class="card-body p-0">
+                    @if (Model.LowStockProducts.Count == 0)
+                    {
+                        <div class="p-3 text-success">
+                            ✅ All products are well stocked!
+                        </div>
+                    }
+                    else
+                    {
+                        <table class="table table-sm mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Qty</th>
+                                    <th>Min</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var p in Model.LowStockProducts)
+                                {
+                                    <tr>
+                                        <td>@p.Name</td>
+                                        <td class="text-danger fw-bold">
+                                            @p.Quantity
+                                        </td>
+                                        <td>@p.MinStockLevel</td>
+                                        <td>
+                                            <a href="/Product/AddStock/@p.ProductId"
+                                               class="btn btn-success btn-sm">
+                                                + Stock
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const labels = [@Html.Raw(string.Join(",",
+        Model.ChartData.Select(x => $"'{x.ProductName}'")))];
+    const quantities = [@Html.Raw(string.Join(",",
+        Model.ChartData.Select(x => x.Quantity)))];
+    const minLevels = [@Html.Raw(string.Join(",",
+        Model.ChartData.Select(x => x.MinStockLevel)))];
+
+    const ctx = document.getElementById('stockChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Current Stock',
+                    data: quantities,
+                    backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Minimum Level',
+                    data: minLevels,
+                    backgroundColor: 'rgba(255, 99, 132, 0.7)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+</script>

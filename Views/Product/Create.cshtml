@@ -1,0 +1,69 @@
+@{
+    ViewData["Title"] = "Add Product";
+}
+
+<div class="container mt-4">
+    <h2>Add New Product</h2>
+    <hr />
+
+    <form method="post" action="/Product/Create">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label class="form-label">Product Name</label>
+                    <input type="text" name="Name" 
+                           class="form-control" required />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Category</label>
+                    <select name="CategoryId" class="form-control" required>
+                        <option value="">-- Select Category --</option>
+                        @foreach (var cat in ViewBag.Categories)
+                        {
+                            <option value="@cat.CategoryId">@cat.Name</option>
+                        }
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Supplier</label>
+                    <select name="SupplierId" class="form-control" required>
+                        <option value="">-- Select Supplier --</option>
+                        @foreach (var sup in ViewBag.Suppliers)
+                        {
+                            <option value="@sup.SupplierId">@sup.Name</option>
+                        }
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Description</label>
+                    <input type="text" name="Description" 
+                           class="form-control" />
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label class="form-label">Initial Quantity</label>
+                    <input type="number" name="Quantity" 
+                           class="form-control" required min="0" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Minimum Stock Level</label>
+                    <input type="number" name="MinStockLevel" 
+                           class="form-control" required min="1" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Unit Price (₹)</label>
+                    <input type="number" name="UnitPrice" 
+                           class="form-control" required 
+                           min="0" step="0.01" />
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-success">
+            Save Product
+        </button>
+        <a href="/Product/Index" class="btn btn-secondary ms-2">
+            Cancel
+        </a>
+    </form>
+</div>
