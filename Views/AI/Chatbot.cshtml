@@ -1,0 +1,69 @@
+@{
+    ViewData["Title"] = "AI Chatbot";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+
+            <div class="card shadow mb-4">
+                <div class="card-header bg-dark text-white">
+                    <h4 class="mb-0">💬 Inventory Assistant</h4>
+                    <small>
+                        Ask anything about products, suppliers
+                        and stock movements
+                    </small>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex flex-wrap gap-2 mb-3">
+                        <span class="badge bg-light text-dark border">
+                            How many products do we have?
+                        </span>
+                        <span class="badge bg-light text-dark border">
+                            List all suppliers
+                        </span>
+                        <span class="badge bg-light text-dark border">
+                            What items are low on stock?
+                        </span>
+                        <span class="badge bg-light text-dark border">
+                            Which category has most products?
+                        </span>
+                    </div>
+
+                    <form method="post" action="/AI/Chatbot">
+                        <div class="input-group">
+                            <input type="text"
+                                   name="message"
+                                   class="form-control form-control-lg"
+                                   placeholder="Ask anything..."
+                                   value="@ViewBag.Message"
+                                   required />
+                            <button type="submit"
+                                    class="btn btn-primary btn-lg">
+                                Ask AI
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            @if (ViewBag.Response != null)
+            {
+                <div class="card shadow border-primary">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">🤖 AI Response</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted mb-2">
+                            <strong>You asked:</strong> @ViewBag.Message
+                        </p>
+                        <hr />
+                        <div style="white-space: pre-line; line-height: 1.8;">
+                            @ViewBag.Response
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

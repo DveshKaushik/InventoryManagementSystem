@@ -1,0 +1,107 @@
+@{
+    ViewData["Title"] = "AI Stock Analyzer";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-9">
+
+            <!-- Header -->
+            <div class="card shadow mb-4">
+                <div class="card-header bg-dark text-white">
+                    <h4 class="mb-0">
+                        🤖 AI Stock Analyzer
+                    </h4>
+                    <small>
+                        Ask anything about your inventory —
+                        AI analyzes real data and gives recommendations
+                    </small>
+                </div>
+                <div class="card-body">
+
+                    <!-- Quick stats if response exists -->
+                    @if (ViewBag.TotalProducts != null)
+                    {
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <div class="card bg-primary text-white text-center p-2">
+                                    <h4>@ViewBag.TotalProducts</h4>
+                                    <small>Total Products</small>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card bg-danger text-white text-center p-2">
+                                    <h4>@ViewBag.LowStockCount</h4>
+                                    <small>Low Stock Items</small>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card bg-success text-white text-center p-2">
+                                    <h4>₹@string.Format("{0:N0}", ViewBag.TotalValue)</h4>
+                                    <small>Total Value</small>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    <!-- Example questions -->
+                    <p class="text-muted mb-2">
+                        <small>Try asking:</small>
+                    </p>
+                    <div class="d-flex flex-wrap gap-2 mb-3">
+                        <span class="badge bg-light text-dark border">
+                            Which items need immediate reordering?
+                        </span>
+                        <span class="badge bg-light text-dark border">
+                            Analyze my inventory health
+                        </span>
+                        <span class="badge bg-light text-dark border">
+                            Which supplier should I contact first?
+                        </span>
+                        <span class="badge bg-light text-dark border">
+                            What is my total inventory value?
+                        </span>
+                        <span class="badge bg-light text-dark border">
+                            Give me a reorder priority list
+                        </span>
+                    </div>
+
+                    <!-- Input form -->
+                    <form method="post" action="/AI/StockAnalyzer">
+                        <div class="input-group">
+                            <input type="text"
+                                   name="question"
+                                   class="form-control form-control-lg"
+                                   placeholder="Ask about your inventory..."
+                                   value="@ViewBag.Question"
+                                   required />
+                            <button type="submit"
+                                    class="btn btn-primary btn-lg">
+                                🔍 Analyze
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- AI Response -->
+            @if (ViewBag.Response != null)
+            {
+                <div class="card shadow border-primary">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">🤖 AI Analysis</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted mb-2">
+                            <strong>You asked:</strong> @ViewBag.Question
+                        </p>
+                        <hr />
+                        <div style="white-space: pre-line; line-height: 1.8;">
+                            @ViewBag.Response
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
