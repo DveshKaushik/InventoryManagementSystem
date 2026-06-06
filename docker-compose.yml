@@ -1,0 +1,11 @@
+services:
+  app:
+    build: .
+    ports:
+      - "8081:80"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=host.docker.internal\SQLEXPRESS;Database=InventoryManagementDB;User ID=sa;Password=YourStr0ngPassword!;TrustServerCertificate=True
+      - GroqApiKey=${GROQ_API_KEY}
