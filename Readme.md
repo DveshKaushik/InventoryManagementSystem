@@ -12,7 +12,7 @@ companies.
 ## 🛠️ Technologies Used
 
 ### Backend
-- ASP.NET MVC (.NET 8)
+- ASP.NET MVC (.NET 10)
 - C#
 - MySQL 8.0
 - MySQL Workbench or any MySQL Client
@@ -27,8 +27,6 @@ companies.
 
 ### DevOps
 - Git + GitHub (version control)
-- GitHub Actions (CI/CD pipeline)
-- Docker + docker-compose (containerization)
 
 ## ✨ Features
 
@@ -49,8 +47,6 @@ companies.
 - Foreign key constraint handling
 - Real-time stock level calculations
 - Dependency injection pattern
-- CI/CD pipeline via GitHub Actions
-- Docker containerization
 
 ## 🗄️ Database Structure
 Categories
@@ -75,9 +71,9 @@ Quantity, MovementDate, Reason
 ## 🚀 How to Run Locally
 
 ### Prerequisites
-- .NET 8 SDK
+- .NET 10 SDK
 - MySQL Server
-- MySQL Workbench / CLI or docker
+- MySQL Workbench / CLI
 
 ### Steps
 
@@ -109,26 +105,10 @@ dotnet run
 6. Open browser:
 http://localhost:5001
 
-### Run with Docker
-```bash
-docker-compose up --build
-```
-Open browser: http://localhost:8081
-
-## ⚙️ CI/CD Pipeline
-
-Every push to main branch automatically:
-- Checks out code
-- Sets up .NET 8
-- Restores dependencies
-- Builds the project
-- Publishes release version
-
 ## 🔒 Security
 - API keys stored in `.env` file — never pushed to GitHub
 - `.env` is gitignored
 - Parameterized SQL queries prevent SQL injection
-- GitHub Secrets used for CI/CD pipeline
 
 ## 🤖 AI Integration
 - **Model:** LLaMA 3.3 70B via Groq API (free tier)
@@ -162,10 +142,5 @@ InventoryManagementSystem/
 │   ├── AI/           ← AI pages
 │   └── Shared/       ← Layout + navbar
 │
-├── .github/workflows/
-│   └── build.yml     ← CI/CD pipeline
-│
-├── Dockerfile        ← Docker image config
-├── docker-compose.yml ← Multi-container setup
 ├── .env.example      ← Environment variables template
 └── appsettings.json  ← App configuration
