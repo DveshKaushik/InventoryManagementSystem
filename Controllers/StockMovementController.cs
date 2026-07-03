@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
+using MySql.Data.MySqlClient;
 using InventoryManagementSystem.Models;
 
 namespace InventoryManagementSystem.Controllers
@@ -20,7 +20,7 @@ namespace InventoryManagementSystem.Controllers
             using (var conn = _db.GetConnection())
             {
                 conn.Open();
-                var cmd = new SqlCommand(@"
+                var cmd = new MySqlCommand(@"
                     SELECT sm.*, p.Name AS ProductName
                     FROM StockMovements sm
                     INNER JOIN Products p ON sm.ProductId = p.ProductId
@@ -60,11 +60,11 @@ namespace InventoryManagementSystem.Controllers
                 // Check if OUT movement has enough stock
                 if (movement.MovementType == "OUT")
                 {
-                    var checkCmd = new SqlCommand(
+                    var checkCmd = new MySqlCommand(
                         "SELECT Quantity FROM Products WHERE ProductId = @Id",
                         conn);
                     checkCmd.Parameters.AddWithValue("@Id", movement.ProductId);
-                    var currentQty = (int)checkCmd.ExecuteScalar();
+                    var currentQty = Convert.ToInt32(checkCmd.ExecuteScalar());
 
                     if (currentQty < movement.Quantity)
                     {
@@ -80,13 +80,13 @@ namespace InventoryManagementSystem.Controllers
                     ? "UPDATE Products SET Quantity = Quantity + @Qty WHERE ProductId = @Id"
                     : "UPDATE Products SET Quantity = Quantity - @Qty WHERE ProductId = @Id";
 
-                var updateCmd = new SqlCommand(updateSql, conn);
+                var updateCmd = new MySqlCommand(updateSql, conn);
                 updateCmd.Parameters.AddWithValue("@Qty", movement.Quantity);
                 updateCmd.Parameters.AddWithValue("@Id", movement.ProductId);
                 updateCmd.ExecuteNonQuery();
 
                 // Record the movement
-                var insertCmd = new SqlCommand(@"
+                var insertCmd = new MySqlCommand(@"
                     INSERT INTO StockMovements
                     (ProductId, MovementType, Quantity, Reason)
                     VALUES
@@ -107,7 +107,7 @@ namespace InventoryManagementSystem.Controllers
             using (var conn = _db.GetConnection())
             {
                 conn.Open();
-                var cmd = new SqlCommand(
+                var cmd = new MySqlCommand(
                     "SELECT ProductId, Name, Quantity FROM Products ORDER BY Name",
                     conn);
                 var reader = cmd.ExecuteReader();

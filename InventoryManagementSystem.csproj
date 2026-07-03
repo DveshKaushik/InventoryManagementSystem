@@ -9,7 +9,6 @@
   <ItemGroup>
     <PackageReference Include="DotNetEnv" Version="3.2.0" />
     <PackageReference Include="EPPlus" Version="8.6.0" />
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="7.0.1" />
     <PackageReference Include="MySql.Data" Version="9.7.0" />
   </ItemGroup>
 

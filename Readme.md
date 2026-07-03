@@ -1,6 +1,6 @@
 # Inventory Management System
 
-A full-stack web application built with ASP.NET MVC and SQL Server to manage 
+A full-stack web application built with ASP.NET MVC and MySQL database to manage 
 inventory, suppliers, and stock movements for manufacturing and petrochemical 
 industries — targeting real-world client domains served by enterprise software 
 companies.
@@ -14,8 +14,8 @@ companies.
 ### Backend
 - ASP.NET MVC (.NET 8)
 - C#
-- SQL Server 2025 Express
-- SSMS (SQL Server Management Studio)
+- MySQL 8.0
+- MySQL Workbench or any MySQL Client
 - Groq API + LLaMA 3.3 70B (AI features)
 - DotNetEnv (secure API key management)
 
@@ -76,8 +76,8 @@ Quantity, MovementDate, Reason
 
 ### Prerequisites
 - .NET 8 SDK
-- SQL Server Express
-- SSMS
+- MySQL Server
+- MySQL Workbench / CLI or docker
 
 ### Steps
 
@@ -87,21 +87,18 @@ git clone https://github.com/DveshKaushik/InventoryManagementSystem.git
 cd InventoryManagementSystem
 ```
 
-2. Set up the database in SSMS:
+2. Set up the database in MySQL:
 ```sql
 CREATE DATABASE InventoryManagementDB;
 ```
-Then run the table creation scripts from `Database/setup.sql`
+Then run the table creation and seeding scripts from `Database/setup_mysql.sql`
 
 3. Create `.env` file in project root:
 GROQ_API_KEY=your_groq_key_here
 
 4. Update connection string in `appsettings.json`:
 ```json
-"DefaultConnection": "Server=localhost\\SQLEXPRESS;
-Database=InventoryManagementDB;
-Trusted_Connection=True;
-TrustServerCertificate=True"
+"DefaultConnection": "Server=localhost;Database=InventoryManagementDB;Uid=root;Pwd=YourStrongPassword!;"
 ```
 
 5. Run the application:

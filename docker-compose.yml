@@ -1,11 +1,26 @@
 services:
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_DATABASE: InventoryManagementDB
+      MYSQL_ROOT_PASSWORD: YourStrongPassword!
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./Database/setup_mysql.sql:/docker-entrypoint-initdb.d/setup.sql
+
   app:
     build: .
     ports:
       - "8081:80"
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+    depends_on:
+      - db
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DefaultConnection=Server=host.docker.internal\SQLEXPRESS;Database=InventoryManagementDB;User ID=sa;Password=YourStr0ngPassword!;TrustServerCertificate=True
+      - ConnectionStrings__DefaultConnection=Server=db;Database=InventoryManagementDB;Uid=root;Pwd=YourStrongPassword!;
       - GroqApiKey=${GROQ_API_KEY}
+
+volumes:
+  db_data:

@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
+using MySql.Data.MySqlClient;
 using InventoryManagementSystem.Models;
 
 namespace InventoryManagementSystem.Controllers
@@ -20,7 +20,7 @@ namespace InventoryManagementSystem.Controllers
             using (var conn = _db.GetConnection())
             {
                 conn.Open();
-                var cmd = new SqlCommand(
+                var cmd = new MySqlCommand(
                     "SELECT * FROM Suppliers ORDER BY Name", conn);
                 var reader = cmd.ExecuteReader();
                 while (reader.Read())
@@ -47,7 +47,7 @@ namespace InventoryManagementSystem.Controllers
             using (var conn = _db.GetConnection())
             {
                 conn.Open();
-                var cmd = new SqlCommand(@"
+                var cmd = new MySqlCommand(@"
                     INSERT INTO Suppliers 
                     (Name, Contact, Phone, Email, Address)
                     VALUES 
@@ -72,10 +72,10 @@ namespace InventoryManagementSystem.Controllers
                     conn.Open();
 
                     // Check if supplier has products linked
-                    var checkCmd = new SqlCommand(
+                    var checkCmd = new MySqlCommand(
                         "SELECT COUNT(*) FROM Products WHERE SupplierId = @Id", conn);
                     checkCmd.Parameters.AddWithValue("@Id", id);
-                    var count = (int)checkCmd.ExecuteScalar();
+                    var count = Convert.ToInt32(checkCmd.ExecuteScalar());
 
                     if (count > 0)
                     {
@@ -86,7 +86,7 @@ namespace InventoryManagementSystem.Controllers
                     }
 
                     // Safe to delete
-                    var cmd = new SqlCommand(
+                    var cmd = new MySqlCommand(
                         "DELETE FROM Suppliers WHERE SupplierId = @Id", conn);
                     cmd.Parameters.AddWithValue("@Id", id);
                     cmd.ExecuteNonQuery();

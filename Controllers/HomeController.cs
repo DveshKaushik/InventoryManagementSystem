@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
+using MySql.Data.MySqlClient;
 using InventoryManagementSystem.Models;
 
 namespace InventoryManagementSystem.Controllers
@@ -24,29 +24,29 @@ namespace InventoryManagementSystem.Controllers
                 conn.Open();
 
                 // Total products
-                model.TotalProducts = (int)new SqlCommand(
-                    "SELECT COUNT(*) FROM Products", conn).ExecuteScalar();
+                model.TotalProducts = Convert.ToInt32(new MySqlCommand(
+                    "SELECT COUNT(*) FROM Products", conn).ExecuteScalar());
 
                 // Total suppliers
-                model.TotalSuppliers = (int)new SqlCommand(
-                    "SELECT COUNT(*) FROM Suppliers", conn).ExecuteScalar();
+                model.TotalSuppliers = Convert.ToInt32(new MySqlCommand(
+                    "SELECT COUNT(*) FROM Suppliers", conn).ExecuteScalar());
 
                 // Total categories
-                model.TotalCategories = (int)new SqlCommand(
-                    "SELECT COUNT(*) FROM Categories", conn).ExecuteScalar();
+                model.TotalCategories = Convert.ToInt32(new MySqlCommand(
+                    "SELECT COUNT(*) FROM Categories", conn).ExecuteScalar());
 
                 // Low stock count
-                model.LowStockCount = (int)new SqlCommand(
+                model.LowStockCount = Convert.ToInt32(new MySqlCommand(
                     "SELECT COUNT(*) FROM Products WHERE Quantity <= MinStockLevel",
-                    conn).ExecuteScalar();
+                    conn).ExecuteScalar());
 
                 // Total inventory value
-                model.TotalInventoryValue = (decimal)new SqlCommand(
-                    "SELECT ISNULL(SUM(Quantity * UnitPrice), 0) FROM Products",
-                    conn).ExecuteScalar();
+                model.TotalInventoryValue = Convert.ToDecimal(new MySqlCommand(
+                    "SELECT COALESCE(SUM(Quantity * UnitPrice), 0) FROM Products",
+                    conn).ExecuteScalar());
 
                 // Low stock products
-                var lowCmd = new SqlCommand(@"
+                var lowCmd = new MySqlCommand(@"
                     SELECT p.*, c.Name AS CategoryName, s.Name AS SupplierName
                     FROM Products p
                     INNER JOIN Categories c ON p.CategoryId = c.CategoryId
@@ -68,10 +68,11 @@ namespace InventoryManagementSystem.Controllers
                 lowReader.Close();
 
                 // Chart data - top 6 products stock levels
-                var chartCmd = new SqlCommand(@"
-                    SELECT TOP 6 Name, Quantity, MinStockLevel
+                var chartCmd = new MySqlCommand(@"
+                    SELECT Name, Quantity, MinStockLevel
                     FROM Products
-                    ORDER BY Quantity ASC", conn);
+                    ORDER BY Quantity ASC
+                    LIMIT 6", conn);
 
                 var chartReader = chartCmd.ExecuteReader();
                 while (chartReader.Read())

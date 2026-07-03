@@ -1,4 +1,4 @@
-using Microsoft.Data.SqlClient;
+using MySql.Data.MySqlClient;
 
 namespace InventoryManagementSystem.Models
 {
@@ -11,9 +11,9 @@ namespace InventoryManagementSystem.Models
             _connectionString = connectionString;
         }
 
-        public SqlConnection GetConnection()
+        public MySqlConnection GetConnection()
         {
-            return new SqlConnection(_connectionString);
+            return new MySqlConnection(_connectionString);
         }
     }
 }

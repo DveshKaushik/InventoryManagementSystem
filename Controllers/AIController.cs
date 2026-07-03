@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
+using MySql.Data.MySqlClient;
 using InventoryManagementSystem.Models;
 
 namespace InventoryManagementSystem.Controllers
@@ -38,7 +38,7 @@ namespace InventoryManagementSystem.Controllers
                 conn.Open();
 
                 // Get all products with status
-                var prodCmd = new SqlCommand(@"
+                var prodCmd = new MySqlCommand(@"
                     SELECT p.Name, p.Quantity, p.MinStockLevel,
                            p.UnitPrice, c.Name AS Category,
                            s.Name AS Supplier
@@ -73,12 +73,13 @@ namespace InventoryManagementSystem.Controllers
                 prodReader.Close();
 
                 // Get recent stock movements
-                var movCmd = new SqlCommand(@"
-                    SELECT TOP 10 p.Name, sm.MovementType,
+                var movCmd = new MySqlCommand(@"
+                    SELECT p.Name, sm.MovementType,
                            sm.Quantity, sm.MovementDate, sm.Reason
                     FROM StockMovements sm
                     INNER JOIN Products p ON sm.ProductId = p.ProductId
-                    ORDER BY sm.MovementDate DESC", conn);
+                    ORDER BY sm.MovementDate DESC
+                    LIMIT 10", conn);
 
                 var movReader = movCmd.ExecuteReader();
                 while (movReader.Read())
@@ -145,7 +146,7 @@ namespace InventoryManagementSystem.Controllers
                 conn.Open();
 
                 // Products
-                var prodCmd = new SqlCommand(@"
+                var prodCmd = new MySqlCommand(@"
                     SELECT p.Name, p.Quantity, p.MinStockLevel,
                            p.UnitPrice, c.Name AS Category
                     FROM Products p
@@ -160,7 +161,7 @@ namespace InventoryManagementSystem.Controllers
                 prodReader.Close();
 
                 // Suppliers
-                var supCmd = new SqlCommand(
+                var supCmd = new MySqlCommand(
                     "SELECT Name, Contact, Phone FROM Suppliers", conn);
                 var supReader = supCmd.ExecuteReader();
                 while (supReader.Read())
@@ -170,11 +171,12 @@ namespace InventoryManagementSystem.Controllers
                 supReader.Close();
 
                 // Recent movements
-                var movCmd = new SqlCommand(@"
-                    SELECT TOP 5 p.Name, sm.MovementType, sm.Quantity
+                var movCmd = new MySqlCommand(@"
+                    SELECT p.Name, sm.MovementType, sm.Quantity
                     FROM StockMovements sm
                     INNER JOIN Products p ON sm.ProductId = p.ProductId
-                    ORDER BY sm.MovementDate DESC", conn);
+                    ORDER BY sm.MovementDate DESC
+                    LIMIT 5", conn);
                 var movReader = movCmd.ExecuteReader();
                 while (movReader.Read())
                     movements.Add(

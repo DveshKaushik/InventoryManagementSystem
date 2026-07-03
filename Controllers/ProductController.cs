@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
+using MySql.Data.MySqlClient;
 using InventoryManagementSystem.Models;
 
 namespace InventoryManagementSystem.Controllers
@@ -20,7 +20,7 @@ namespace InventoryManagementSystem.Controllers
             using (var conn = _db.GetConnection())
             {
                 conn.Open();
-                var cmd = new SqlCommand(@"
+                var cmd = new MySqlCommand(@"
                     SELECT p.*, c.Name AS CategoryName, s.Name AS SupplierName
                     FROM Products p
                     INNER JOIN Categories c ON p.CategoryId = c.CategoryId
@@ -62,7 +62,7 @@ namespace InventoryManagementSystem.Controllers
             using (var conn = _db.GetConnection())
             {
                 conn.Open();
-                var cmd = new SqlCommand(@"
+                var cmd = new MySqlCommand(@"
                     INSERT INTO Products 
                     (Name, CategoryId, SupplierId, Quantity, MinStockLevel, UnitPrice, Description)
                     VALUES 
@@ -87,13 +87,13 @@ namespace InventoryManagementSystem.Controllers
             {
                 conn.Open();
                 // Delete stock movements first
-                var cmd1 = new SqlCommand(
+                var cmd1 = new MySqlCommand(
                     "DELETE FROM StockMovements WHERE ProductId = @Id", conn);
                 cmd1.Parameters.AddWithValue("@Id", id);
                 cmd1.ExecuteNonQuery();
 
                 // Then delete product
-                var cmd2 = new SqlCommand(
+                var cmd2 = new MySqlCommand(
                     "DELETE FROM Products WHERE ProductId = @Id", conn);
                 cmd2.Parameters.AddWithValue("@Id", id);
                 cmd2.ExecuteNonQuery();
@@ -107,7 +107,7 @@ namespace InventoryManagementSystem.Controllers
             using (var conn = _db.GetConnection())
             {
                 conn.Open();
-                var cmd = new SqlCommand(
+                var cmd = new MySqlCommand(
                     "SELECT * FROM Products WHERE ProductId = @Id", conn);
                 cmd.Parameters.AddWithValue("@Id", id);
                 var reader = cmd.ExecuteReader();
@@ -132,7 +132,7 @@ namespace InventoryManagementSystem.Controllers
                 conn.Open();
 
                 // Update product quantity
-                var cmd1 = new SqlCommand(@"
+                var cmd1 = new MySqlCommand(@"
                     UPDATE Products 
                     SET Quantity = Quantity + @Quantity 
                     WHERE ProductId = @Id", conn);
@@ -141,7 +141,7 @@ namespace InventoryManagementSystem.Controllers
                 cmd1.ExecuteNonQuery();
 
                 // Record stock movement
-                var cmd2 = new SqlCommand(@"
+                var cmd2 = new MySqlCommand(@"
                     INSERT INTO StockMovements 
                     (ProductId, MovementType, Quantity, Reason)
                     VALUES (@ProductId, 'IN', @Quantity, @Reason)", conn);
@@ -163,7 +163,7 @@ namespace InventoryManagementSystem.Controllers
             {
                 conn.Open();
 
-                var catCmd = new SqlCommand(
+                var catCmd = new MySqlCommand(
                     "SELECT CategoryId, Name FROM Categories", conn);
                 var catReader = catCmd.ExecuteReader();
                 while (catReader.Read())
@@ -174,7 +174,7 @@ namespace InventoryManagementSystem.Controllers
                     });
                 catReader.Close();
 
-                var supCmd = new SqlCommand(
+                var supCmd = new MySqlCommand(
                     "SELECT SupplierId, Name FROM Suppliers", conn);
                 var supReader = supCmd.ExecuteReader();
                 while (supReader.Read())
